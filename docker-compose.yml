@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: account-db
+    ports:
+      - "5433:5432"
+  client:
+    build: ./SecurityManagment
+    ports:
+      - 8081:8081
+    environment:
+      - DB_URL=jdbc:postgresql://db:5432/account-db
+      - DB_USER_NAME=root
+      - DB_PASSWORD=root
+    restart: always
+    depends_on:
+      - db
+  account:
+    build: ./AccountManagment
+    ports:
+      - 8082:8082
+    environment:
+      - DB_URL=jdbc:postgresql://db:5432/account-db
+      - DB_USER_NAME=root
+      - DB_PASSWORD=root
+    restart: always
+    depends_on:
+      - db
